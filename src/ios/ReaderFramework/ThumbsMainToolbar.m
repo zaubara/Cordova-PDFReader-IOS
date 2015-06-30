@@ -87,8 +87,8 @@
 
 		UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
-		[doneButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:1.0f] forState:UIControlStateNormal];
-		[doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateHighlighted];
+		[doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateNormal];
+		[doneButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:1.0f] forState:UIControlStateHighlighted];
 		[doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
 		[doneButton addTarget:self action:@selector(doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 		[doneButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
@@ -102,15 +102,15 @@
 		titleX += (doneButtonWidth + buttonSpacing); titleWidth -= (doneButtonWidth + buttonSpacing);
 
         if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
-            
+
             CGFloat showControlX = (viewWidth - (SHOW_CONTROL_WIDTH + buttonSpacing));
-            
+
             UIImage *thumbsImage = [UIImage imageNamed:@"Reader.bundle/Reader-Thumbs"];
             UIImage *bookmarkImage = [UIImage imageNamed:@"Reader.bundle/Reader-Mark-Y"];
             NSArray *buttonItems = [NSArray arrayWithObjects:thumbsImage, bookmarkImage, nil];
-            
+
             BOOL useTint = [self respondsToSelector:@selector(tintColor)]; // iOS 7 and up
-            
+
             UISegmentedControl *showControl = [[UISegmentedControl alloc] initWithItems:buttonItems];
             showControl.frame = CGRectMake(showControlX, BUTTON_Y, SHOW_CONTROL_WIDTH, BUTTON_HEIGHT);
             showControl.tintColor = (useTint ? [UIColor blackColor] : [UIColor colorWithWhite:0.8f alpha:1.0f]);
@@ -119,13 +119,13 @@
             showControl.selectedSegmentIndex = 0; // Default segment index
             //showControl.backgroundColor = [UIColor grayColor];
             showControl.exclusiveTouch = YES;
-            
+
             [showControl addTarget:self action:@selector(showControlTapped:) forControlEvents:UIControlEventValueChanged];
-            
+
             [self addSubview:showControl];
-            
+
             titleWidth -= (SHOW_CONTROL_WIDTH + buttonSpacing);
-            
+
         } // end of bookmarks Option
 
 		if (largeDevice == YES) // Show document filename in toolbar
@@ -143,7 +143,7 @@
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumScaleFactor = 0.75f;
 			titleLabel.text = title;
-            
+
             if (![[ReaderConstants sharedReaderConstants] flatUI]) { // Option
                 titleLabel.shadowColor = [UIColor colorWithWhite:0.65f alpha:1.0f];
                 titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
