@@ -32,21 +32,21 @@ static NSString *const kReaderCopyrightNotice = @"Reader v2.x.y • Copyright ©
 
 + (ReaderConstants *)sharedReaderConstants{
     static ReaderConstants *_sharedReaderConstants = nil;
-    
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedReaderConstants = [[self alloc] init];
     });
-    
+
     return _sharedReaderConstants;
 }
 
 - (instancetype)init{
     self = [super init];
-    
+
     if (self) {
         // Default Values
-        
+
         self.flatUI = [ReaderConstants isAtLeastiOS7];
         self.showShadows = YES;
         self.enableThumbs = YES;
@@ -58,8 +58,9 @@ static NSString *const kReaderCopyrightNotice = @"Reader v2.x.y • Copyright ©
         self.landscapeDoublePage = NO;
         self.landscapeSingleFirstPage = YES;
         self.enableShare = YES;
+        self.title = @"";
     }
-    
+
     return self;
 }
 

@@ -1,5 +1,5 @@
-/** 
- * Cordova PDF reader for IOS (based on Reader https://github.com/KiranPanesar/Reader) 
+/**
+ * Cordova PDF reader for IOS (based on Reader https://github.com/KiranPanesar/Reader)
  *
  * Copyright (c) Emmanuel Tabard 2014
  */
@@ -22,7 +22,7 @@ var parseUrl = function(
       === a[d]     // is the same as the property
     ) c[d]         // add it
       = a[d];      // to the return object
-    
+
     return c       // return the object
   }
 }(
@@ -51,7 +51,7 @@ var exec = function (methodName, options, success, error) {
 var protectCall = function (callback, context) {
     if (callback && typeof callback === 'function') {
         try {
-            var args = Array.prototype.slice.call(arguments, 2); 
+            var args = Array.prototype.slice.call(arguments, 2);
             callback.apply(this, args);
         }
         catch (err) {
@@ -110,7 +110,8 @@ PDFReader.prototype.open = function (filePath, options, success, error) {
         landscapeSingleFirstPage: true,
         toolbarBackgroundColor: null,
         textColor: null,
-        enableShare: false
+        enableShare: false,
+        title: ''
     };
 
     Object.keys(options).forEach(function (key) {
@@ -130,7 +131,8 @@ PDFReader.prototype.open = function (filePath, options, success, error) {
         defaultOptions['landscapeSingleFirstPage'],
         defaultOptions['toolbarBackgroundColor'],
         defaultOptions['textColor'],
-        defaultOptions['enableShare']
+        defaultOptions['enableShare'],
+        defaultOptions['title']
     ];
     exec('open', args, setupOk, setupFailed);
 };

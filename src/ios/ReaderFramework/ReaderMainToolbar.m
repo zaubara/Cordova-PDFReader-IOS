@@ -33,10 +33,10 @@
 @implementation ReaderMainToolbar
 {
     UIButton *markButton;
-    
+
     UIImage *markImageN;
     UIImage *markImageY;
-    
+
     UIImage *buttonH;
     UIImage *buttonN;
 }
@@ -71,31 +71,31 @@
 - (instancetype)initWithFrame:(CGRect)frame document:(ReaderDocument *)document
 {
     assert(document != nil); // Must have a valid ReaderDocument
-    
+
     if ((self = [super initWithFrame:frame]))
     {
         CGFloat viewWidth = self.bounds.size.width; // Toolbar view width
-        
+
         if (![[ReaderConstants sharedReaderConstants] flatUI]) { // Option
             buttonH = [[UIImage imageNamed:@"Reader.bundle/Reader-Button-H"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
             buttonN = [[UIImage imageNamed:@"Reader.bundle/Reader-Button-N"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
         } // end of flatUI Option
-        
+
         BOOL largeDevice = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
-        
+
         const CGFloat buttonSpacing = BUTTON_SPACE; const CGFloat iconButtonWidth = ICON_BUTTON_WIDTH;
-        
+
         CGFloat titleX = BUTTON_X; CGFloat titleWidth = (viewWidth - (titleX + titleX));
-        
+
         CGFloat leftButtonX = BUTTON_X; // Left-side button start X position
-        
+
         if (![[ReaderConstants sharedReaderConstants] standalone]) { // Option
-            
+
             UIFont *doneButtonFont = [UIFont systemFontOfSize:BUTTON_FONT_SIZE];
             NSString *doneButtonText = [ReaderLanguage get:@"Done"];
             CGSize doneButtonSize = [doneButtonText sizeWithFont:doneButtonFont];
             CGFloat doneButtonWidth = (doneButtonSize.width + TEXT_BUTTON_PADDING);
-            
+
             UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
             doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
             [doneButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:1.0f] forState:UIControlStateNormal];
@@ -107,16 +107,16 @@
             doneButton.autoresizingMask = UIViewAutoresizingNone;
             //doneButton.backgroundColor = [UIColor grayColor];
             doneButton.exclusiveTouch = YES;
-            
+
             [self addSubview:doneButton];
             leftButtonX += (doneButtonWidth + buttonSpacing);
-            
+
             titleX += (doneButtonWidth + buttonSpacing); titleWidth -= (doneButtonWidth + buttonSpacing);
-            
+
         } // end of standalone Option
-        
+
         if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
-            
+
             UIButton *thumbsButton = [UIButton buttonWithType:UIButtonTypeCustom];
             thumbsButton.frame = CGRectMake(leftButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
             [thumbsButton setImage:[UIImage imageNamed:@"Reader.bundle/Reader-Thumbs"] forState:UIControlStateNormal];
@@ -126,19 +126,19 @@
             thumbsButton.autoresizingMask = UIViewAutoresizingNone;
             //thumbsButton.backgroundColor = [UIColor grayColor];
             thumbsButton.exclusiveTouch = YES;
-            
+
             [self addSubview:thumbsButton]; //leftButtonX += (iconButtonWidth + buttonSpacing);
-            
+
             titleX += (iconButtonWidth + buttonSpacing); titleWidth -= (iconButtonWidth + buttonSpacing);
-            
+
         } // end of enableThumbs Option
-        
+
         CGFloat rightButtonX = viewWidth; // Right-side buttons start X position
-        
+
         if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
-            
+
             rightButtonX -= (iconButtonWidth + buttonSpacing); // Position
-            
+
             UIButton *flagButton = [UIButton buttonWithType:UIButtonTypeCustom];
             flagButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
             //[flagButton setImage:[UIImage imageNamed:@"Reader-Mark-N"] forState:UIControlStateNormal];
@@ -148,26 +148,26 @@
             flagButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
             //flagButton.backgroundColor = [UIColor grayColor];
             flagButton.exclusiveTouch = YES;
-            
+
             [self addSubview:flagButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
-            
+
             markButton = flagButton; markButton.enabled = NO; markButton.tag = NSIntegerMin;
-            
+
             markImageN = [UIImage imageNamed:@"Reader.bundle/Reader-Mark-N"]; // N image
             markImageY = [UIImage imageNamed:@"Reader.bundle/Reader-Mark-Y"]; // Y image
-            
+
         } // end of bookmarks Option
-        
+
         if (document.canEmail == YES && [[ReaderConstants sharedReaderConstants] enableShare]) // Document email enabled
         {
             if ([MFMailComposeViewController canSendMail] == YES) // Can email
             {
                 unsigned long long fileSize = [document.fileSize unsignedLongLongValue];
-                
+
                 if (fileSize < 15728640ull) // Check attachment size limit (15MB)
                 {
                     rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
-                    
+
                     UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
                     emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
                     [emailButton setImage:[UIImage imageNamed:@"Reader.bundle/Reader-Email"] forState:UIControlStateNormal];
@@ -177,20 +177,20 @@
                     emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
                     //emailButton.backgroundColor = [UIColor grayColor];
                     emailButton.exclusiveTouch = YES;
-                    
+
                     [self addSubview:emailButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
                 }
             }
         }
-        
+
         if ((document.canPrint == YES) && [[ReaderConstants sharedReaderConstants] enableShare] && (document.password == nil)) // Document print enabled
         {
             Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
-            
+
             if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable])
             {
                 rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
-                
+
                 UIButton *printButton = [UIButton buttonWithType:UIButtonTypeCustom];
                 printButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
                 [printButton setImage:[UIImage imageNamed:@"Reader.bundle/Reader-Print"] forState:UIControlStateNormal];
@@ -200,15 +200,15 @@
                 printButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
                 //printButton.backgroundColor = [UIColor grayColor];
                 printButton.exclusiveTouch = YES;
-                
+
                 [self addSubview:printButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
             }
         }
-        
+
         if (document.canExport == YES && [[ReaderConstants sharedReaderConstants] enableShare]) // Document export enabled
         {
             rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
-            
+
             UIButton *exportButton = [UIButton buttonWithType:UIButtonTypeCustom];
             exportButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
             [exportButton setImage:[UIImage imageNamed:@"Reader.bundle/Reader-Export"] forState:UIControlStateNormal];
@@ -218,16 +218,16 @@
             exportButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
             //exportButton.backgroundColor = [UIColor grayColor];
             exportButton.exclusiveTouch = YES;
-            
+
             [self addSubview:exportButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
         }
-        
+
         if (largeDevice == YES) // Show document filename in toolbar
         {
             CGRect titleRect = CGRectMake(titleX, BUTTON_Y, titleWidth, TITLE_HEIGHT);
-            
+
             UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleRect];
-            
+
             titleLabel.textAlignment = NSTextAlignmentCenter;
             titleLabel.font = [UIFont systemFontOfSize:TITLE_FONT_SIZE];
             titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -236,56 +236,60 @@
             titleLabel.backgroundColor = [UIColor clearColor];
             titleLabel.adjustsFontSizeToFitWidth = YES;
             titleLabel.minimumScaleFactor = 0.75f;
-            titleLabel.text = [document.fileName stringByDeletingPathExtension];
-            
+            if ([[[ReaderConstants sharedReaderConstants] title] length] > 0) {
+                titleLabel.text = [[ReaderConstants sharedReaderConstants] title];
+            } else {
+                titleLabel.text = [document.fileName stringByDeletingPathExtension];
+            }
+
             if (![[ReaderConstants sharedReaderConstants] flatUI]) { // Option
                 titleLabel.shadowColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
                 titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
             } // end of flatUI Option
-            
+
             [self addSubview:titleLabel];
         }
     }
-    
+
     return self;
 }
 
 - (void)setBookmarkState:(BOOL)state
 {
     if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
-        
+
         if (state != markButton.tag) // Only if different state
         {
             if (self.hidden == NO) // Only if toolbar is visible
             {
                 UIImage *image = (state ? markImageY : markImageN);
-                
+
                 [markButton setImage:image forState:UIControlStateNormal];
             }
-            
+
             markButton.tag = state; // Update bookmarked state tag
         }
-        
+
         if (markButton.enabled == NO) markButton.enabled = YES;
-        
+
     } // end of bookmarks Option
 }
 
 - (void)updateBookmarkImage
 {
     if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
-        
+
         if (markButton.tag != NSIntegerMin) // Valid tag
         {
             BOOL state = markButton.tag; // Bookmarked state
-            
+
             UIImage *image = (state ? markImageY : markImageN);
-            
+
             [markButton setImage:image forState:UIControlStateNormal];
         }
-        
+
         if (markButton.enabled == NO) markButton.enabled = YES;
-        
+
     } // end of bookmarks Option
 }
 
@@ -312,7 +316,7 @@
     if (self.hidden == YES)
     {
         [self updateBookmarkImage]; // First
-        
+
         [UIView animateWithDuration:0.25 delay:0.0
                             options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
                          animations:^(void)

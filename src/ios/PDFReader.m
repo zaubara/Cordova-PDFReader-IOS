@@ -35,10 +35,11 @@
     NSString* toolbarBackgroundColor = [command.arguments objectAtIndex:10];
     NSString* textColor = [command.arguments objectAtIndex:11];
     BOOL enableShare = [[command.arguments objectAtIndex:12]  isEqual: [NSNumber numberWithInt:1]];
-    
+    NSString* title = [command.arguments objectAtIndex:13];
+
     NSFileManager *fileManager = [NSFileManager defaultManager];
     CDVPluginResult *pluginResult;
-    
+
     ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:password];
     ReaderConstants *readerConstants = [ReaderConstants sharedReaderConstants];
     readerConstants.flatUI = flatUI;
@@ -50,28 +51,29 @@
     readerConstants.landscapeDoublePage = landscapeDoublePage;
     readerConstants.landscapeSingleFirstPage = landscapeSingleFirstPage;
     readerConstants.enableShare = enableShare;
-    
+    readerConstants.title = title;
+
     ReaderColors *readerColors = [ReaderColors sharedReaderColors];
 
     if ((NSNull *)toolbarBackgroundColor != [NSNull null] && [[ReaderConstants sharedReaderConstants] flatUI]) {
         readerColors.toolbarBackgroundColor = @[[PDFReader colorFromHexString:toolbarBackgroundColor]];
     }
-    
+
     if ((NSNull *)textColor != [NSNull null]) {
         readerColors.textColor = [PDFReader colorFromHexString:textColor];
     }
-    
-    
+
+
     if ([fileManager fileExistsAtPath:filePath]){
-        
-        
+
+
         if (document != nil) // Must have a valid ReaderDocument object in order to proceed with things
         {
             self.readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
-            
+
             self.readerViewController.delegate = self; // Set the ReaderViewController delegate to self
             [self.viewController presentViewController:readerViewController animated:YES completion:nil];
-            
+
         }
         else // Log an error so that we know that something went wrong
         {
@@ -81,7 +83,7 @@
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"filepath error"];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    
+
 }
 
 -(void) closePDFReader

@@ -110,4 +110,11 @@
  */
 @property (nonatomic, assign) BOOL enableShare;
 
+/**
+ *  Title to be shown on large displays
+ *
+ *  Default "".
+ */
+@property (nonatomic, assign) NSString* title;
+
 @end
