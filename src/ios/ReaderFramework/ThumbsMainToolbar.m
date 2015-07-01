@@ -146,7 +146,7 @@
       if ([[[ReaderConstants sharedReaderConstants] title] length] > 0) {
           titleLabel.text = [[ReaderConstants sharedReaderConstants] title];
       } else {
-          titleLabel.text = [document.fileName stringByDeletingPathExtension];
+          titleLabel.text = title;
       }
 
       if (![[ReaderConstants sharedReaderConstants] flatUI]) { // Option
