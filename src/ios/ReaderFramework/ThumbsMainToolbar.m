@@ -41,7 +41,7 @@
 #define BUTTON_SPACE 8.0f
 #define BUTTON_HEIGHT 30.0f
 
-#define BUTTON_FONT_SIZE 15.0f
+#define BUTTON_FONT_SIZE 16.0f
 #define TEXT_BUTTON_PADDING 24.0f
 
 #define SHOW_CONTROL_WIDTH 78.0f
@@ -105,15 +105,15 @@
 
             CGFloat showControlX = (viewWidth - (SHOW_CONTROL_WIDTH + buttonSpacing));
 
-            UIImage *thumbsImage = [UIImage imageNamed:@"Reader.bundle/Reader-Thumbs"];
-            UIImage *bookmarkImage = [UIImage imageNamed:@"Reader.bundle/Reader-Mark-Y"];
+            UIImage *thumbsImage = [UIImage imageNamed:@"Reader.bundle/Reader-Thumbs-Small"];
+            UIImage *bookmarkImage = [UIImage imageNamed:@"Reader.bundle/Reader-Mark-Small"];
             NSArray *buttonItems = [NSArray arrayWithObjects:thumbsImage, bookmarkImage, nil];
 
             BOOL useTint = [self respondsToSelector:@selector(tintColor)]; // iOS 7 and up
 
             UISegmentedControl *showControl = [[UISegmentedControl alloc] initWithItems:buttonItems];
             showControl.frame = CGRectMake(showControlX, BUTTON_Y, SHOW_CONTROL_WIDTH, BUTTON_HEIGHT);
-            showControl.tintColor = (useTint ? [UIColor blackColor] : [UIColor colorWithWhite:0.8f alpha:1.0f]);
+            showControl.tintColor = (useTint ? [UIColor whiteColor] : [UIColor colorWithWhite:0.8f alpha:1.0f]);
             showControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
             showControl.segmentedControlStyle = UISegmentedControlStyleBar;
             showControl.selectedSegmentIndex = 0; // Default segment index
@@ -142,12 +142,17 @@
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumScaleFactor = 0.75f;
-			titleLabel.text = title;
+			//titleLabel.text = title;
+      if ([[[ReaderConstants sharedReaderConstants] title] length] > 0) {
+          titleLabel.text = [[ReaderConstants sharedReaderConstants] title];
+      } else {
+          titleLabel.text = [document.fileName stringByDeletingPathExtension];
+      }
 
-            if (![[ReaderConstants sharedReaderConstants] flatUI]) { // Option
-                titleLabel.shadowColor = [UIColor colorWithWhite:0.65f alpha:1.0f];
-                titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-            } // end of flatUI Option
+      if (![[ReaderConstants sharedReaderConstants] flatUI]) { // Option
+          titleLabel.shadowColor = [UIColor colorWithWhite:0.65f alpha:1.0f];
+          titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+      } // end of flatUI Option
 
 			[self addSubview:titleLabel];
 		}

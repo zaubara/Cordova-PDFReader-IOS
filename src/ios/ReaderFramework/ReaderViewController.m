@@ -56,9 +56,9 @@
 	UIDocumentInteractionController *documentInteraction;
 
 	UIPrintInteractionController *printInteraction;
-    
+
     BOOL doublePage;
-    
+
 	CGFloat scrollViewOutset;
 
 	CGSize lastAppearSize;
@@ -97,42 +97,42 @@
 
 - (void)handleLandscapeDoublePage {
     NSInteger futureCurrentPage = currentPage;
-    
+
     if (futureCurrentPage == 0) {
         return;
     }
-    
+
     UIInterfaceOrientation orientation= [[UIApplication sharedApplication] statusBarOrientation];
     maximumPage = [document.pageCount integerValue];
-    
+
     doublePage = false;
-    
+
     if(UIInterfaceOrientationIsLandscape(orientation)){
         doublePage = true;
         float maxPage = maximumPage;
         float nextCurrentPage = (currentPage / 2.0);
-        
-        
+
+
         if ([[ReaderConstants sharedReaderConstants] landscapeSingleFirstPage]) {
             nextCurrentPage = floor(nextCurrentPage) + 1;
             maxPage = ((maxPage - 1) / 2) + 1;
         } else {
             maxPage = (maxPage / 2);
         }
-        
+
         currentPage = (int) ceil(nextCurrentPage);
         maximumPage = (int) ceil(maxPage);
     }
-    
+
     //Clear cached pages
     for (NSNumber *key in [contentViews allKeys]) // Enumerate content views
     {
         ReaderContentView *contentView = [contentViews objectForKey:key];
-        
+
         [contentView removeFromSuperview]; [contentViews removeObjectForKey:key];
     }
-    
-    
+
+
     [self updateContentViews:theScrollView];
     //Force recompute view
     [self showDocumentPage:futureCurrentPage forceRedraw:true];
@@ -174,7 +174,7 @@
     BOOL renderDoublePage = false;
     if (doublePage) {
         NSInteger lastPageEven;
- 
+
         if (![[ReaderConstants sharedReaderConstants] landscapeSingleFirstPage]) {
             lastPageEven = [document.pageCount integerValue];
             renderDoublePage = true;
@@ -220,7 +220,7 @@
 	if (pageA < minimumPage) pageA = minimumPage; if (pageB > maximumPage) pageB = maximumPage;
 
 	NSRange pageRange = NSMakeRange(pageA, (pageB - pageA + 1)); // Make page range (A to B)
-    
+
 
 	NSMutableIndexSet *pageSet = [NSMutableIndexSet indexSetWithIndexesInRange:pageRange];
 
@@ -244,7 +244,7 @@
 	if (pages > 0) // We have pages to add
 	{
 		NSEnumerationOptions options = 0; // Default
-        
+
 
 		if (pages == 2) // Handle case of only two content views
 		{
@@ -276,14 +276,14 @@
 	CGFloat contentOffsetX = scrollView.contentOffset.x; // Content offset X
 
 	NSInteger page = (contentOffsetX / viewWidth); page++; // Page number
-    
+
     if (doublePage && page > 1) {
         if (![[ReaderConstants sharedReaderConstants] landscapeSingleFirstPage]) {
             page = page * 2;
         } else if (page > 1) {
             page = (page - 1) * 2;
         }
-        
+
     }
     if (page != currentPage) // Only if on different page
 	{
@@ -308,7 +308,7 @@
 - (void)showDocumentPage:(NSInteger)page forceRedraw:(bool)forceRedraw
 {
     NSInteger renderPage = page;
-    
+
     if(doublePage){
         float nextRenderPage;
         //If double renderPage is not the same as page
@@ -318,10 +318,10 @@
         } else if (page == 1) {
             nextRenderPage = 1;
         }
-        
+
         renderPage = (int) ceil(nextRenderPage);
     }
-	   
+
     if (page != currentPage || forceRedraw) // Only if on different page or if force redraw
 	{
         if ((renderPage < minimumPage) || (renderPage > maximumPage)) return;
@@ -351,7 +351,7 @@
 - (void)showDocument
 {
     UIInterfaceOrientation orientation= [[UIApplication sharedApplication] statusBarOrientation];
-    
+
     if(UIInterfaceOrientationIsLandscape(orientation) && [[ReaderConstants sharedReaderConstants] landscapeDoublePage]){
         currentPage = [document.pageNumber integerValue];
         [self handleLandscapeDoublePage];
@@ -391,7 +391,7 @@
 	{
 		if ((object != nil) && ([object isKindOfClass:[ReaderDocument class]])) // Valid object
 		{
-           
+
 			userInterfaceIdiom = [UIDevice currentDevice].userInterfaceIdiom; // User interface idiom
 
 			NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; // Default notification center
@@ -405,7 +405,7 @@
 			[object updateDocumentProperties]; document = object; // Retain the supplied ReaderDocument object for our use
 
 			[ReaderThumbCache touchThumbCacheWithGUID:object.guid]; // Touch the document thumb cache directory
-            
+
 		}
 		else // Invalid ReaderDocument object
 		{
@@ -514,9 +514,9 @@
 	}
 
     if ([[ReaderConstants sharedReaderConstants] disableIdle]) { // Option
-        
+
         [UIApplication sharedApplication].idleTimerDisabled = YES;
-        
+
     } // end of disableIdle Option
 }
 
@@ -527,9 +527,9 @@
 	lastAppearSize = self.view.bounds.size; // Track view size
 
     if ([[ReaderConstants sharedReaderConstants] disableIdle]) { // Option
-        
+
         [UIApplication sharedApplication].idleTimerDisabled = NO;
-        
+
     } // end of disableIdle Option
 }
 
@@ -592,7 +592,7 @@
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    
+
 	ignoreDidScroll = NO;
 }
 
@@ -656,7 +656,7 @@
 		CGPoint contentOffset = theScrollView.contentOffset; // Offset
 
 		contentOffset.x += theScrollView.bounds.size.width; // View X++
-        
+
 		[theScrollView setContentOffset:contentOffset animated:YES];
 	}
 }
@@ -696,6 +696,15 @@
 							url = [NSURL URLWithString:http]; // Proper http-based URL
 						}
 					}
+          if ([url.scheme isEqualToString:@"youtube"]) {
+              NSString *youtube = url.absoluteString;
+              if ([youtube hasPrefix:@"youtube://"] == YES) // Check for 'www' prefix
+              {
+                  NSString *httpyoutube = [[NSString alloc] initWithFormat:@"http://youtu.be/%@", [youtube substringFromIndex:10]];
+
+                  url = [NSURL URLWithString:httpyoutube]; // Proper http-based URL
+              }
+          }
 
 					if ([[UIApplication sharedApplication] openURL:url] == NO)
 					{
@@ -826,27 +835,27 @@
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIButton *)button
 {
     if (![[ReaderConstants sharedReaderConstants] standalone]) { // Option
-        
+
         [self closeDocument]; // Close ReaderViewController
-        
+
     } // end of standalone Option
 }
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIButton *)button
 {
     if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
-        
+
         if (printInteraction != nil) [printInteraction dismissAnimated:NO];
-        
+
         ThumbsViewController *thumbsViewController = [[ThumbsViewController alloc] initWithReaderDocument:document];
-        
+
         thumbsViewController.title = self.title; thumbsViewController.delegate = self; // ThumbsViewControllerDelegate
-        
+
         thumbsViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         thumbsViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-        
+
         [self presentViewController:thumbsViewController animated:NO completion:NULL];
-        
+
     } // end of enableThumbs Option
 }
 
@@ -943,9 +952,9 @@
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIButton *)button
 {
     if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
-        
+
         if (printInteraction != nil) [printInteraction dismissAnimated:YES];
-        
+
         if ([document.bookmarks containsIndex:currentPage]) // Remove bookmark
         {
             [document.bookmarks removeIndex:currentPage]; [mainToolbar setBookmarkState:NO];
@@ -954,7 +963,7 @@
         {
             [document.bookmarks addIndex:currentPage]; [mainToolbar setBookmarkState:YES];
         }
-        
+
     } // end of bookmarks Option
 }
 
@@ -981,18 +990,18 @@
 - (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page
 {
     if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
-        
+
         [self showDocumentPage:page];
-        
+
     } // end of enableThumbs Option
 }
 
 - (void)dismissThumbsViewController:(ThumbsViewController *)viewController
 {
     if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
-        
+
         [self dismissViewControllerAnimated:NO completion:NULL];
-        
+
     } // end of enableThumbs Option
 }
 

@@ -115,6 +115,6 @@
  *
  *  Default "".
  */
-@property (nonatomic, assign) NSString* title;
+@property (nonatomic, copy) NSString* title;
 
 @end
