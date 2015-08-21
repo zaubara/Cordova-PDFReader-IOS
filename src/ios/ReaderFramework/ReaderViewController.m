@@ -936,8 +936,12 @@
 			MFMailComposeViewController *mailComposer = [MFMailComposeViewController new];
 
 			[mailComposer addAttachmentData:attachment mimeType:@"application/pdf" fileName:fileName];
-
-			[mailComposer setSubject:fileName]; // Use the document file name for the subject
+            
+            if ([[[ReaderConstants sharedReaderConstants] title] length] > 0) {
+                [mailComposer setSubject:[[ReaderConstants sharedReaderConstants] title]]; // Use title for the subject
+            } else {
+                [mailComposer setSubject:fileName]; // Use the document file name for the subject
+            }
 
 			mailComposer.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
 			mailComposer.modalPresentationStyle = UIModalPresentationFormSheet;
