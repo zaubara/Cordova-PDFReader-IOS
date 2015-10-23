@@ -30,14 +30,14 @@
 static NSBundle *bundle = nil;
 
 +(void)initialize {
-    NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
-    NSArray* languages = [defs objectForKey:@"AppleLanguages"];
+    NSArray* languages = [NSLocale preferredLanguages];
 
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Reader" ofType:@"bundle"];
     bundle = [NSBundle bundleWithPath:bundlePath];
     
     for (NSString* lang in languages) {
-        bundle = [NSBundle bundleWithPath:[bundle pathForResource:lang ofType:@"lproj" ]];
+        NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:lang];
+        bundle = [NSBundle bundleWithPath:[bundle pathForResource:[locale objectForKey:NSLocaleLanguageCode] ofType:@"lproj" ]];
         if (bundle)
             break;
     }

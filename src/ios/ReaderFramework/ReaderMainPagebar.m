@@ -28,6 +28,7 @@
 #import "ReaderMainPagebar.h"
 #import "ReaderThumbCache.h"
 #import "ReaderDocument.h"
+#import "ReaderLanguage.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -133,7 +134,7 @@
 	{
 		NSInteger pages = [document.pageCount integerValue]; // Total pages
 
-		NSString *format = NSLocalizedString(@"%i of %i", @"format"); // Format
+        NSString *format = [ReaderLanguage get:@"%i of %i"];
 
 		NSString *number = [[NSString alloc] initWithFormat:format, (int)page, (int)pages];
 
